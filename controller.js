@@ -19,8 +19,7 @@ function sendCommand(message) {
     }
 
     var message = new Buffer.from(message);
-    client.send(message, 0, message.length, PORT_SEND, HOST, function(err, bytes) {
-    });
+    client.send(message, 0, message.length, PORT_SEND, HOST);
 }
 
 function getCommand() {
@@ -29,4 +28,3 @@ function getCommand() {
     });
 }
 
-getCommand();
