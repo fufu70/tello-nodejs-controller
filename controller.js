@@ -1,25 +1,19 @@
-var dgram = require('dgram');
+var data = require('./assets/data.js');
+var tello = require('./assets/tello.js');
 var stdio = require('stdio');
-var PORT_SEND = 8889;
-var HOST = '192.168.10.1';
-
-var client = dgram.createSocket('udp4');
-
-client.on('message', function (message, remote) {
-    console.log(remote.address + ':' + remote.port +' - ' + message);
-    getCommand();
-});
-
-client.bind(PORT_SEND);
+var isInitalized = false;
 
 function sendCommand(message) {
 
     if (message == 'quit') {
         client.close(); return;
+    } else if (message == 'state') {
+        console.log(data.currentState());
+        getCommand();
+    } else {
+        var message = new Buffer.from(message);
+        tello.command(message);
     }
-
-    var message = new Buffer.from(message);
-    client.send(message, 0, message.length, PORT_SEND, HOST);
 }
 
 function getCommand() {
@@ -28,4 +22,14 @@ function getCommand() {
     });
 }
 
-getCommand();
+function messageCallback(message, remote) {
+    if (isInitalized) {
+        console.log(remote.address + ':' + remote.port +' - ' + message);
+        getCommand();
+    }
+}
+
+tello.init(function() {
+    getCommand();
+    isInitalized = true;
+}, messageCallback);
