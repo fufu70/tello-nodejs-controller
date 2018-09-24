@@ -64,7 +64,7 @@ function saveData(callback) {
 
     }
 
-    fs.writeFile('./' + Date.now() + '.json', "[" + recordingStringArr.join(',') + "]", function(err) {
+    fs.writeFile('./logs/' + Date.now() + '.json', "[" + recordingStringArr.join(',') + "]", function(err) {
         if(err) {
             return console.log(err);
         }
@@ -73,18 +73,6 @@ function saveData(callback) {
         callback();
     });
 }
-
-// function setPosition(now) {
-//     var state = getState();
-//     var timeChange = (now - time) / 1000;
-//     time = now;
-
-//     position = {
-//         x: position.x + (state.vgx * (timeChange / 1000)),
-//         y: position.y + (state.vgy * (timeChange / 1000)),
-//         z: position.z + (state.vgz * (timeChange / 1000)),
-//     }
-// }
 
 function getState() {
     var split = new Buffer.from(stateString).toString().split(";");
@@ -124,9 +112,7 @@ module.exports = {
     resetRecording: function() {
         recording = [];
     },
-    getRecording: function() {
-        return recording;
-    },
+    recording: recording,
     saveRecording: saveData,
     currentState: function() {
         if (stateString) {

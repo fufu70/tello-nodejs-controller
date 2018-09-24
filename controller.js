@@ -26,9 +26,6 @@ function sendCommand(message) {
     } else if (message == 'reset') {
         data.resetRecording();
         getCommand();
-    } else if (message == 'getrecording') {
-        console.log(data.getRecording());
-        getCommand();
     } else if (message == 'save') {
         data.saveRecording(getCommand);
     } else {
