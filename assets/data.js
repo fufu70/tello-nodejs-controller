@@ -64,7 +64,7 @@ function saveData(callback) {
 
     }
 
-    fs.writeFile('./logs/' + Date.now() + '.json', "[" + recordingStringArr.join(',') + "]", function(err) {
+    fs.writeFile(getLogFileName(Date.now()), "[" + recordingStringArr.join(',') + "]", function(err) {
         if(err) {
             return console.log(err);
         }
@@ -101,6 +101,10 @@ function getState() {
     };
 }
 
+function getFileName(filename) {
+    return './data/' + filename + '.json';
+}
+
 module.exports = {
     init: init,
     startRecording: function() {
@@ -112,8 +116,12 @@ module.exports = {
     resetRecording: function() {
         recording = [];
     },
+    readFile: function(filename) {
+        return JSON.parse(fs.readFileSync(getFileName(filename), 'utf8'));
+    },
     recording: recording,
     saveRecording: saveData,
+    getFileName: getFileName,
     currentState: function() {
         if (stateString) {
             return getState();
