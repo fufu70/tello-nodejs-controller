@@ -62,8 +62,7 @@ function getMaxHeight(positions) {
     return maxHeight;
 }
 
-
-var estimatedPositions = calculatePositionThroughTime(JSON.parse(fs.readFileSync(file, 'utf8')));
+exportToCSV(JSON.parse(fs.readFileSync(file, 'utf8')), 'up_200_1537726575275');
 // console.log(estimatedPositions[0]);
 // console.log(estimatedPositions[estimatedPositions.length - 1]);
 // console.log(getMaxHeight(estimatedPositions));
