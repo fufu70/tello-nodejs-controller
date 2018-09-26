@@ -64,7 +64,7 @@ function saveData(callback) {
 
     }
 
-    fs.writeFile(getLogFileName(Date.now()), "[" + recordingStringArr.join(',') + "]", function(err) {
+    fs.writeFile(getFileName(Date.now()), "[" + recordingStringArr.join(',') + "]", function(err) {
         if(err) {
             return console.log(err);
         }

@@ -1,0 +1,9 @@
+[
+    "init",
+    "start",
+    "takeoff",
+    "land",
+    "stop",
+    "save",
+    "quit"
+]
