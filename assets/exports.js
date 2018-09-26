@@ -6,7 +6,7 @@ var fs = require('fs');
  * @param  {array}  data     An array with objects.
  * @param  {string} fileName [description]
  */
-function exportToCSV(data, fileName) {
+function exportToCSV(data, fileName, callback) {
     if (data.length <= 0) {
         return;
     }
@@ -30,6 +30,7 @@ function exportToCSV(data, fileName) {
         }
 
         console.log("The csv file, " + fileName + ".csv was saved!");
+        callback();
     });
 }
 

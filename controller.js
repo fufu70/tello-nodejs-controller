@@ -5,6 +5,11 @@ var stdio = require('stdio');
 var isInitalized = false;
 var isQuitting = false;
 
+/**
+ * Reads a command file and then runs each command singularly.
+ * 
+ * @param  {string} filename The name of the command file in the commands folder.
+ */
 function readCommandFile(filename) {
     var commandArr = data.readFile('../commands/' + filename);
     var currentIndex = 0;
@@ -25,9 +30,25 @@ function readCommandFile(filename) {
     nextCommand();
 }
 
+/**
+ * The message can be a two part message, a primary part that controls
+ * the switch case, and a secondary part that passes information to the
+ * process running inside of the case.
+ * 
+ * @param  {string}   message  The primary and secondary message
+ * @param  {Function} callback The function to call once the case is complete.
+ */
 function sendCommand(message, callback) {
 
-    switch(message.toLowerCase()) 
+    var messageSplit = message.split(" ");
+    if (messageSplit.length <= 0) {
+        console.log("Message must be a parsable string");
+        return;
+    }
+    var primaryMessage = messageSplit[0];
+    var secondaryMessage = (messageSplit.length >= 2) ? messageSplit[1] : undefined;
+
+    switch(primaryMessage.toLowerCase()) 
     {        
         case 'quit':
             tello.command('emergency');
@@ -56,29 +77,40 @@ function sendCommand(message, callback) {
             callback();
             break;
         case 'save':
-            data.saveRecording(callback);
+            if (secondaryMessage == undefined) {
+                data.saveRecording("", callback);
+            } else {
+                data.saveRecording(secondaryMessage, callback);
+            }
             break;
         case 'exportdata':
-            stdio.question('Name of Data file', function (err, filename) {
-                exports.exportToCSV(data.readFile(filename), filename);
-            });
+            if (secondaryMessage == undefined) {
+                stdio.question('Name of Data file', function (err, filename) {
+                    exports.exportToCSV(data.readFile(filename), filename, callback);
+                });
+            } else {
+                exports.exportToCSV(data.readFile(secondaryMessage), secondaryMessage, callback);
+            }
             break;
         case 'read':
-            stdio.question('Name of Command file', function (err, filename) {
-                readCommandFile(filename);
-            });
+            if (secondaryMessage == undefined) {
+                stdio.question('Name of Command file', function (err, filename) {
+                    readCommandFile(filename);
+                });
+            } else {
+                readCommandFile(secondaryMessage);
+            }
             break;
         case 'init':
             tello.init(function() {
                 isInitalized = true;
                 callback();
-            }, function(message, remote) {
-                messageCallback(message, remote, callback);
+            }, function(telloMessage, remote) {
+                messageCallback(telloMessage, remote, callback);
             });
             break;
         default:
-            var message = new Buffer.from(message);
-            tello.command(message);
+            tello.command(new Buffer.from(primaryMessage));
     }
 }
 
@@ -88,9 +120,9 @@ function getCommand() {
     });
 }
 
-function messageCallback(message, remote, callback) {
+function messageCallback(telloMessage, remote, callback) {
     if (isInitalized) {
-        console.log(remote.address + ':' + remote.port +' - ' + message);
+        console.log(remote.address + ':' + remote.port +' - ' + telloMessage);
         callback();
     }
 }

@@ -4,6 +4,5 @@
     "takeoff",
     "land",
     "stop",
-    "save",
-    "quit"
+    "save takeoff_land_"
 ]

@@ -37,7 +37,7 @@ function recordData() {
     recording.push(getState());
 }
 
-function saveData(callback) {
+function saveData(prependToFilename, callback) {
 
     var recordingStringArr = [];
 
@@ -64,7 +64,7 @@ function saveData(callback) {
 
     }
 
-    fs.writeFile(getFileName(Date.now()), "[" + recordingStringArr.join(',') + "]", function(err) {
+    fs.writeFile(getFileName(prependToFilename + Date.now()), "[" + recordingStringArr.join(',') + "]", function(err) {
         if(err) {
             return console.log(err);
         }
