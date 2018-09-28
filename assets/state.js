@@ -1,4 +1,4 @@
-var time;
+var time = Date.now();
 
 function getStateFromString(stateStr) {
     var split = new Buffer.from(stateStr).toString().split(";");
