@@ -110,7 +110,12 @@ function sendCommand(message, callback) {
             });
             break;
         default:
-            tello.command(new Buffer.from(message));
+            if (message.indexOf("rc") == 0) {
+                tello.command(new Buffer.from(message));
+                callback();
+            } else {
+                tello.command(new Buffer.from(message));
+            }
     }
 }
 

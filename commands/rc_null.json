@@ -1,0 +1,7 @@
+[
+    "init",
+    "start",
+    "takeoff",
+    "rc 0 0 0 0",
+    "land"
+]

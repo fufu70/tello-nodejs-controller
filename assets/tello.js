@@ -18,7 +18,7 @@ function init(initCallback, messageCallback) {
     });
 
     client.bind(PORT_SEND);
-    command('command');
+    command(new Buffer.from('command'));
 }
 
 function command(message) {
