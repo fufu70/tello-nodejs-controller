@@ -43,25 +43,7 @@ function saveData(prependToFilename, callback) {
     var recordingStringArr = [];
 
     for (var i = 0; i < recording.length; i ++) {
-        var recordingStr = "{";
-        recordingStr += '"pitch": ' + recording[i].pitch + ',';
-        recordingStr += '"roll": ' + recording[i].roll + ',';
-        recordingStr += '"yaw": ' + recording[i].yaw + ',';
-        recordingStr += '"vgx": ' + recording[i].vgx + ',';
-        recordingStr += '"vgy": ' + recording[i].vgy + ',';
-        recordingStr += '"vgz": ' + recording[i].vgz + ',';
-        recordingStr += '"templ": ' + recording[i].templ + ',';
-        recordingStr += '"temph": ' + recording[i].temph + ',';
-        recordingStr += '"tof": ' + recording[i].tof + ',';
-        recordingStr += '"h": ' + recording[i].h + ',';
-        recordingStr += '"bat": ' + recording[i].bat + ',';
-        recordingStr += '"baro": ' + recording[i].baro + ',';
-        recordingStr += '"time": ' + recording[i].time + ',';
-        recordingStr += '"agx": ' + recording[i].agx + ',';
-        recordingStr += '"agy": ' + recording[i].agy + ',';
-        recordingStr += '"agz": ' + recording[i].agz + ',';
-        recordingStr += '"timech": ' + recording[i].timech + '}';
-        recordingStringArr.push(recordingStr);
+        recordingStringArr.push(state.toString(recording[i]));
 
     }
 
