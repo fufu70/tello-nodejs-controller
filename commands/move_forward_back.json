@@ -1,0 +1,10 @@
+[
+    "init",
+    "start",
+    "takeoff",
+    "forward 100",
+    "back 100",
+    "land",
+    "stop",
+    "save forward_back_"
+]

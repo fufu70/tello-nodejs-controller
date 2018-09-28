@@ -28,7 +28,7 @@ function getStateFromString(stateStr) {
 }
 
 function cleanState(state) {
-    state.vgx = state.vgx * 10;
+    state.vgx = state.vgx * -10;
     state.vgy = state.vgy * 10;
     state.vgz = state.vgz * -10;
     state.agx = state.agx;

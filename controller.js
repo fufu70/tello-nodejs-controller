@@ -83,7 +83,7 @@ function sendCommand(message, callback) {
                 data.saveRecording(secondaryMessage, callback);
             }
             break;
-        case 'exportdata':
+        case 'csv':
             if (secondaryMessage == undefined) {
                 stdio.question('Name of Data file', function (err, filename) {
                     exports.exportToCSV(data.readFile(filename), filename, callback);
@@ -110,7 +110,7 @@ function sendCommand(message, callback) {
             });
             break;
         default:
-            tello.command(new Buffer.from(primaryMessage));
+            tello.command(new Buffer.from(message));
     }
 }
 
