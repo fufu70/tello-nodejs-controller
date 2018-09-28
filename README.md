@@ -15,6 +15,7 @@ $ node controller.js
 The controller will accept any commands for reading or commanding the Tello craft but the first command sent to the craft should always be `command`, afterwards Tello is ready to takeoff and fly.
 Make sure that your computer is connected to the Tello wifi. 😉
 There may be instances when tello forgets to send a response message after a command has been sent. This can simply be remedied by restarting node or your computer.
+The `rc` commands in the Tello 1.3.0.0 SDK state that there is an `error` or `ok` response. This is not the case, you can treat the `rc` command as a stream, ignoring the needs for a response.
 
 ### General Sensory information
 
