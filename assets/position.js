@@ -34,6 +34,6 @@ function calculatePositionPoint(motion) {
 }
 
 module.exports = {
-    position: position
+    position: position,
     updatePosition: updatePositionFromState
 }

@@ -1,3 +1,4 @@
+var time;
 
 function getStateFromString(stateStr) {
     var split = new Buffer.from(stateStr).toString().split(";");
@@ -37,30 +38,10 @@ function cleanState(state) {
     return state;
 }
 
-function toString(state) {
-    var stateStr = "{";
-    stateStr += '"pitch": ' + state.pitch + ',';
-    stateStr += '"roll": ' + state.roll + ',';
-    stateStr += '"yaw": ' + state.yaw + ',';
-    stateStr += '"vgx": ' + state.vgx + ',';
-    stateStr += '"vgy": ' + state.vgy + ',';
-    stateStr += '"vgz": ' + state.vgz + ',';
-    stateStr += '"templ": ' + state.templ + ',';
-    stateStr += '"temph": ' + state.temph + ',';
-    stateStr += '"tof": ' + state.tof + ',';
-    stateStr += '"h": ' + state.h + ',';
-    stateStr += '"bat": ' + state.bat + ',';
-    stateStr += '"baro": ' + state.baro + ',';
-    stateStr += '"time": ' + state.time + ',';
-    stateStr += '"agx": ' + state.agx + ',';
-    stateStr += '"agy": ' + state.agy + ',';
-    stateStr += '"agz": ' + state.agz + ',';
-    stateStr += '"timech": ' + state.timech + '}';
-    return stateStr;
-}
-
 module.exports = {
+    init: function() {
+        time = Date.now();
+    },
     fromString: getStateFromString,
-    toString: 
     clean: cleanState,
 };

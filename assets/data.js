@@ -1,16 +1,11 @@
 var fs = require('fs');
-var state = require('./state.js')
+var state = require('./state.js');
+var position = require('./position.js');
 var PORT_READ = 8890;
 var HOST = '0.0.0.0';
 var stateString = undefined;
 var isListening = false;
 var isRecording = false;
-var time;
-var position = {
-    x: 0,
-    y: 0,
-    z: 0,
-}
 var recording = [];
 
 function init(callback) {
@@ -24,7 +19,7 @@ function init(callback) {
 
         if (!isListening) {
             isListening = true;
-            time = Date.now();
+            state.init();
             callback();
         } else if (isRecording) {
             recordData();
@@ -35,7 +30,9 @@ function init(callback) {
 }
 
 function recordData() {
-    recording.push(getState());
+    var state = getState();
+    position.updatePosition(state);
+    recording.push(Object.assign(state, position.position));
 }
 
 function saveData(prependToFilename, callback) {
@@ -43,7 +40,7 @@ function saveData(prependToFilename, callback) {
     var recordingStringArr = [];
 
     for (var i = 0; i < recording.length; i ++) {
-        recordingStringArr.push(state.toString(recording[i]));
+        recordingStringArr.push(JSON.stringify(recording[i]));
 
     }
 
