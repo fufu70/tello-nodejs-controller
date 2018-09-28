@@ -59,7 +59,7 @@ function getState() {
 }
 
 function getFileName(filename) {
-    return './data/' + filename + '.json';
+    return './data/' + filename.replace(".json", "") + '.json';
 }
 
 module.exports = {

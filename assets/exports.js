@@ -35,7 +35,7 @@ function exportToCSV(data, fileName, callback) {
 }
 
 function getFileName(filename) {
-    return './data/' + filename + '.json';
+    return './data/' + filename.replace(".json", "") + '.json';
 }
 
 module.exports = {
