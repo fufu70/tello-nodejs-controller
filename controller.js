@@ -102,12 +102,16 @@ function sendCommand(message, callback) {
             }
             break;
         case 'init':
-            tello.init(function() {
-                isInitalized = true;
-                callback();
-            }, function(telloMessage, remote) {
-                messageCallback(telloMessage, remote, callback);
-            });
+            if (!isInitalized) {
+                tello.init(function() {
+                    isInitalized = true;
+                    callback();
+                }, function(telloMessage, remote) {
+                    messageCallback(telloMessage, remote, callback);
+                });
+            } else {
+                console.log("Tello is already initalized. To initialize again, run quit and run the program again");
+            }
             break;
         default:
             if (isInitalized) {
