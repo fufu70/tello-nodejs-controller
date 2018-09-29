@@ -52,9 +52,7 @@ function sendCommand(message, callback) {
     {        
         case 'quit':
             tello.command('emergency');
-            setTimeout(function() {
-                process.exit();
-            }, 200);
+            exit();
             break;
         case 'state':
             console.log(data.currentState());
@@ -140,4 +138,18 @@ function messageCallback(telloMessage, remote, callback) {
     }
 }
 
-getCommand();
+function exit() {
+    setTimeout(function() {
+        process.exit();
+    }, 200);
+}
+
+/**
+ * Read Input or request input
+ */
+
+if (process.argv[2] !== undefined && typeof(process.argv[2]) == "string" && process.argv[2].indexOf("read") == 0) {
+    sendCommand(process.argv[2]);
+} else {
+    getCommand();
+}
