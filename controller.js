@@ -1,6 +1,6 @@
 var data = require('./assets/data.js');
 var tello = require('./assets/tello.js');
-var exports = require('./assets/exports.js');
+var exportLib = require('./assets/export.js');
 var stdio = require('stdio');
 var isInitalized = false;
 var isQuitting = false;
@@ -84,10 +84,10 @@ function sendCommand(message, callback) {
         case 'csv':
             if (secondaryMessage == undefined) {
                 stdio.question('Name of Data file', function (err, filename) {
-                    exports.exportToCSV(data.readFile(filename), filename, callback);
+                    exportLib.exportToCSV(data.readFile(filename), filename, callback);
                 });
             } else {
-                exports.exportToCSV(data.readFile(secondaryMessage), secondaryMessage, callback);
+                exportLib.exportToCSV(data.readFile(secondaryMessage), secondaryMessage, callback);
             }
             break;
         case 'read':
