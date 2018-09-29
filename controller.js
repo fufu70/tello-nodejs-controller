@@ -110,11 +110,15 @@ function sendCommand(message, callback) {
             });
             break;
         default:
-            if (message.indexOf("rc") == 0) {
-                tello.command(new Buffer.from(message));
-                callback();
+            if (isInitalized) {
+                if (message.indexOf("rc") == 0) {
+                    tello.command(new Buffer.from(message));
+                    callback();
+                } else {
+                    tello.command(new Buffer.from(message));
+                }
             } else {
-                tello.command(new Buffer.from(message));
+                console.log("Initialize before sending a command");
             }
     }
 }
