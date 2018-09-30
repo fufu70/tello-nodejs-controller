@@ -13,6 +13,7 @@ var angularPosition = {
     psi: 0
 };
 var linearVelocity = Object.assign({}, linearPosition);
+var angularVelocity = Object.assign({}, angularPosition);
 var linearAcceleration = Object.assign({}, linearPosition);
 
 /** 
@@ -39,7 +40,7 @@ function updatePositionFromState(state) {
         acceleration: linearAcceleration.z,
         time: state.timech
     });
-    
+
     angularPosition.phi = state.pitch;
     angularPosition.theta = state.roll;
     angularPosition.psi = state.yaw;
@@ -71,6 +72,9 @@ function updateVelocityFromState(state) {
         acceleration: linearAcceleration.z,
         time: state.timech
     });
+    angularVelocity.phi = (state.pitch - angularPosition.phi) / time;
+    angularVelocity.theta = (state.roll - angularPosition.theta) / time;
+    angularVelocity.psi = (state.yaw - angularPosition.psi) / time;
 }
 
 function calculateVelocityPoint(motion) {
@@ -94,6 +98,7 @@ module.exports = {
     linearVelocity: linearVelocity,
     linearAcceleration: linearAcceleration,
     angularPosition: angularPosition,
+    angularVelocity: angularVelocity,
     update: function(state) {
         updateAccelerationFromState(state);
         updateVelocityFromState(state);
