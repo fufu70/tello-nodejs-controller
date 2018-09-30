@@ -39,6 +39,7 @@ function updatePositionFromState(state) {
         acceleration: linearAcceleration.z,
         time: state.timech
     });
+    
     angularPosition.phi = state.pitch;
     angularPosition.theta = state.roll;
     angularPosition.psi = state.yaw;
