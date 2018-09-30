@@ -32,7 +32,7 @@ function init(callback) {
 function recordData() {
     var state = getState();
     euler.update(state);
-    recording.push(Object.assign(state, euler.position));
+    recording.push(Object.assign(state, euler.linearPosition));
 }
 
 function saveData(prependToFilename, callback) {
@@ -87,6 +87,6 @@ module.exports = {
         return {};
     },
     currentPosition: function() {
-        return euler.position;
+        return euler.linearPosition;
     }
 }

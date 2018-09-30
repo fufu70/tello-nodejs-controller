@@ -2,21 +2,18 @@
  * The Euler values are represented in mm scale.
  */
 
-var position = {
-    x: 0,
-    y: 0,
-    z: 0
-}
-var velocity = {
+var linearPosition = {
     x: 0,
     y: 0,
     z: 0
 };
-var acceleration = {
-    x: 0,
-    y: 0,
-    z: 0
+var angularPosition = {
+    phi: 0,
+    theta: 0,
+    psi: 0
 };
+var linearVelocity = Object.assign({}, linearPosition);
+var linearAcceleration = Object.assign({}, linearPosition);
 
 /** 
  * 
@@ -24,24 +21,27 @@ var acceleration = {
  * 
  */
 function updatePositionFromState(state) {
-    position.x = calculatePositionPoint({
-        position: position.x,
-        velocity: velocity.x,
-        acceleration: state.agx,
+    linearPosition.x = calculatePositionPoint({
+        position: linearPosition.x,
+        velocity: linearVelocity.x,
+        acceleration: linearAcceleration.x,
         time: state.timech
     });
-    position.y = calculatePositionPoint({
-        position: position.y,
-        velocity: velocity.y,
-        acceleration: state.agy,
+    linearPosition.y = calculatePositionPoint({
+        position: linearPosition.y,
+        velocity: linearVelocity.y,
+        acceleration: linearAcceleration.y,
         time: state.timech
     });
-    position.z = calculatePositionPoint({
-        position: position.z,
-        velocity: velocity.z,
-        acceleration: state.agz,
+    linearPosition.z = calculatePositionPoint({
+        position: linearPosition.z,
+        velocity: linearVelocity.z,
+        acceleration: linearAcceleration.z,
         time: state.timech
     });
+    angularPosition.phi = state.pitch;
+    angularPosition.theta = state.roll;
+    angularPosition.psi = state.yaw;
 }
 
 function calculatePositionPoint(motion) {
@@ -55,19 +55,19 @@ function calculatePositionPoint(motion) {
  */
 
 function updateVelocityFromState(state) {
-    velocity.x = calculateVelocityPoint({
-        velocity: velocity.x,
-        acceleration: state.agx,
+    linearVelocity.x = calculateVelocityPoint({
+        velocity: linearVelocity.x,
+        acceleration: linearAcceleration.x,
         time: state.timech
     });
-    velocity.y = calculateVelocityPoint({
-        velocity: velocity.y,
-        acceleration: state.agy,
+    linearVelocity.y = calculateVelocityPoint({
+        velocity: linearVelocity.y,
+        acceleration: linearAcceleration.y,
         time: state.timech
     });
-    velocity.z = calculateVelocityPoint({
-        velocity: velocity.z,
-        acceleration: state.agz,
+    linearVelocity.z = calculateVelocityPoint({
+        velocity: linearVelocity.z,
+        acceleration: linearAcceleration.z,
         time: state.timech
     });
 }
@@ -83,15 +83,16 @@ function calculateVelocityPoint(motion) {
  */
 
 function updateAccelerationFromState(state) {
-    acceleration.x = state.agx;
-    acceleration.y = state.agy;
-    acceleration.z = state.agz;
+    linearAcceleration.x = state.agx;
+    linearAcceleration.y = state.agy;
+    linearAcceleration.z = state.agz;
 }
 
 module.exports = {
-    position: position,
-    velocity: velocity,
-    acceleration: acceleration,
+    linearPosition: linearPosition,
+    linearVelocity: linearVelocity,
+    linearAcceleration: linearAcceleration,
+    angularPosition: angularPosition,
     update: function(state) {
         updateAccelerationFromState(state);
         updateVelocityFromState(state);
