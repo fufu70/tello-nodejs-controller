@@ -45,7 +45,7 @@ function setSuggestedControl(time) {
     calculateIntegralError(time);
     calculateLinearCommandedAcceleration();
     calculateAngularCommandedPosition();
-    calculateAngularCommandedVelocity();
+    calculateAngularCommandedVelocity(time);
     calculateAngularCommandedTao();
 
     phiCommandedPositionPrevious = phiCommandedPosition;
