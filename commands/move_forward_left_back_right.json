@@ -8,5 +8,6 @@
     "right 100",
     "land",
     "stop",
-    "save forward_back_"
+    "save forward_left_back_right_",
+    "quit"
 ]
