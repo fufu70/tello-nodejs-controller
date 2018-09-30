@@ -1,9 +1,18 @@
+/**
+ * The Euler values are represented in mm scale.
+ */
+
 var position = {
     x: 0,
     y: 0,
     z: 0
 }
 var velocity = {
+    x: 0,
+    y: 0,
+    z: 0
+};
+var acceleration = {
     x: 0,
     y: 0,
     z: 0
@@ -46,17 +55,17 @@ function calculatePositionPoint(motion) {
  */
 
 function updateVelocityFromState(state) {
-    position.x = calculateVelocityPoint({
+    velocity.x = calculateVelocityPoint({
         velocity: velocity.x,
         acceleration: state.agx,
         time: state.timech
     });
-    position.y = calculateVelocityPoint({
+    velocity.y = calculateVelocityPoint({
         velocity: velocity.y,
         acceleration: state.agy,
         time: state.timech
     });
-    position.z = calculateVelocityPoint({
+    velocity.z = calculateVelocityPoint({
         velocity: velocity.z,
         acceleration: state.agz,
         time: state.timech
@@ -67,9 +76,24 @@ function calculateVelocityPoint(motion) {
     return (motion.acceleration * motion.time) + motion.velocity;
 }
 
+/**
+ * 
+ * Acceleration Functions
+ * 
+ */
+
+function updateAccelerationFromState(state) {
+    acceleration.x = state.agx;
+    acceleration.y = state.agy;
+    acceleration.z = state.agz;
+}
+
 module.exports = {
     position: position,
-    updatePosition: function(state) {
+    velocity: velocity,
+    acceleration: acceleration,
+    update: function(state) {
+        updateAccelerationFromState(state);
         updateVelocityFromState(state);
         updatePositionFromState(state);
     }

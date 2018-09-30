@@ -6,7 +6,7 @@ const ANGULAR_PROPORTIONAL = { x: 15.0, y: 15.0, z: 0.5};
 const ANGULAR_DERIVTIVE = { x: 50.0, y: 50.0, z: 5.0};
 const ANGULAR_INTEGRAL = { x: 0.0, y: 0.0, z: 0.0};
 
-var position = require('./position.js');
+var euler = require('./euler.js');
 var linearCommandedAccelerations = {
     x: 0,
     y: 0,

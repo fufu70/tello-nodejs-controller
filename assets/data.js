@@ -1,6 +1,6 @@
 var fs = require('fs');
 var state = require('./state.js');
-var position = require('./position.js');
+var euler = require('./euler.js');
 var PORT_READ = 8890;
 var HOST = '0.0.0.0';
 var stateString = undefined;
@@ -31,8 +31,8 @@ function init(callback) {
 
 function recordData() {
     var state = getState();
-    position.updatePosition(state);
-    recording.push(Object.assign(state, position.position));
+    euler.update(state);
+    recording.push(Object.assign(state, euler.position));
 }
 
 function saveData(prependToFilename, callback) {
@@ -87,6 +87,6 @@ module.exports = {
         return {};
     },
     currentPosition: function() {
-        return position;
+        return euler.position;
     }
 }
