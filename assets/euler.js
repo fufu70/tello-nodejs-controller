@@ -41,19 +41,22 @@ var motion = {
 function updatePositionFromState(state) {
     linearPosition.x = calculatePositionPoint({
         position: linearPosition.x,
-        velocity: linearVelocity.x,
+        velocity: state.vgx,
+        previousVelocity: linearVelocity.x,
         acceleration: linearAcceleration.x,
         time: state.timech
     });
     linearPosition.y = calculatePositionPoint({
         position: linearPosition.y,
-        velocity: linearVelocity.y,
+        velocity: state.vgy,
+        previousVelocity: linearVelocity.y,
         acceleration: linearAcceleration.y,
         time: state.timech
     });
     linearPosition.z = calculatePositionPoint({
         position: linearPosition.z,
-        velocity: linearVelocity.z,
+        velocity: state.vgz,
+        previousVelocity: linearVelocity.z,
         acceleration: linearAcceleration.z,
         time: state.timech
     });
@@ -64,7 +67,8 @@ function updatePositionFromState(state) {
 }
 
 function calculatePositionPoint(motion) {
-    return motion.position + (motion.velocity * motion.time) - (0.5 * motion.acceleration * motion.time * motion.time);
+    return motion.position + (0.5 * (motion.velocity - motion.previousVelocity) * motion.time * motion.time);
+    // return motion.position + (motion.velocity * motion.time) - (0.5 * motion.acceleration * motion.time * motion.time);
 }
 
 /** 
@@ -121,9 +125,9 @@ module.exports = {
     angularPosition: angularPosition,
     angularVelocity: angularVelocity,
     update: function(state) {
-        updateAccelerationFromState(state);
-        updateVelocityFromState(state);
         updatePositionFromState(state);
+        updateVelocityFromState(state);
+        updateAccelerationFromState(state);
 
         motion.px = linearPosition.x;
         motion.py = linearPosition.y;
