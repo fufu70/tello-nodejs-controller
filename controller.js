@@ -1,6 +1,7 @@
 var data = require('./assets/data.js');
 var tello = require('./assets/tello.js');
 var exportLib = require('./assets/export.js');
+var multicopter = require('./assets/multicopter.js');
 var stdio = require('stdio');
 var isInitalized = false;
 var isQuitting = false;
@@ -31,6 +32,26 @@ function readCommandFile(filename) {
 }
 
 /**
+ * Gets the xyz value and sends it back to the callback function as a object.
+ * 
+ * @param  {Function} callback To call once all user information is gathered.
+ *                             Passes a object: {x: 0, y: 0, z: 0}
+ */
+function get3DVector(callback) {
+    stdio.question('X', function (err, x) {
+        stdio.question('Y', function (err, y) {
+            stdio.question('Z', function (err, z) {
+                callback({
+                    x: parseInt(x),
+                    y: parseInt(y),
+                    z: parseInt(z)
+                });
+            });
+        });
+    });
+}
+
+/**
  * The message can be a two part message, a primary part that controls
  * the switch case, and a secondary part that passes information to the
  * process running inside of the case.
@@ -39,7 +60,6 @@ function readCommandFile(filename) {
  * @param  {Function} callback The function to call once the case is complete.
  */
 function sendCommand(message, callback) {
-
     var messageSplit = message.split(" ");
     if (messageSplit.length <= 0) {
         console.log("Message must be a parsable string");
@@ -110,6 +130,27 @@ function sendCommand(message, callback) {
             } else {
                 console.log("Tello is already initalized. To initialize again, run quit and run the program again");
             }
+            break;
+        case 'compos':
+            get3DVector(function(vector) {
+                multicopter.commandedPosition = vector;
+                console.log(multicopter.commandedPosition);
+                callback();
+            });
+            break;
+        case 'comvel':
+            get3DVector(function(vector) {
+                multicopter.commandedVelocity = vector;
+                console.log(multicopter.commandedVelocity);
+                callback();
+            });
+            break;
+        case 'comacc':
+            get3DVector(function(vector) {
+                multicopter.commandedAcceleration = vector;
+                console.log(multicopter.commandedAcceleration);
+                callback();
+            });
             break;
         default:
             if (isInitalized) {
