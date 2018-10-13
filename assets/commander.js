@@ -16,9 +16,9 @@ var commandFunctions = {
     csv:      csv,
     read:     read,
     init:     init,
-    compos:   compos,
-    comvel:   comvel,
-    comacc:   comacc,
+    compos:   multicopter.setCommandedPosition,
+    comvel:   multicopter.setCommandedVelocity,
+    comacc:   multicopter.setCommandedAcceleration,
 };
 
 /**
@@ -44,45 +44,6 @@ function readCommandFile(filename) {
     }
 
     nextCommand();
-}
-
-/**
- * Gets the xyz value and sends it back to the callback function as a object.
- * 
- * @param  {Function} callback To call once all user information is gathered.
- *                             Passes a object: {x: 0, y: 0, z: 0}
- */
-function get3DVector(callback) {
-    stdio.question('X', function (err, x) {
-        stdio.question('Y', function (err, y) {
-            stdio.question('Z', function (err, z) {
-                callback({
-                    x: parseInt(x),
-                    y: parseInt(y),
-                    z: parseInt(z)
-                });
-            });
-        });
-    });
-}
-
-/**
- * Checks that the string provided is a 3D vector. The expected string is of format:
- * "{x:1.0,y:1.0,z:1.0}"
- * It should not contain any spaces.
- * 
- * @param  {string} str The string to match
- * @return {boolean}    True if the the string is a 3D vector.
- */
-function is3DVector(str) {
-    try {
-        var vector = JSON.parse(str);
-        return typeof(vector.x) == 'number' 
-            && typeof(vector.y) == 'number' 
-            && typeof(vector.z) == 'number';
-    } catch(err) {
-        return false;
-    }
 }
 
 /**
@@ -220,64 +181,18 @@ function init(arg, callback) {
 }
 
 /**
- * Sets the commanded position of the multicopter from the provided
- * 3D vector.
+ * Converts the provided data file to a csv file in the "exports" directory.
  * 
- * @param  {string}   arg      3D vector.
- * @param  {Function} callback Called after the position is set.
+ * @param  {string}   arg      The name of the data file.
+ * @param  {Function} callback Called after the action is complete.
  */
-function compos(arg, callback) {
-    if (arg == undefined || is3DVector(arg)) {
-        get3DVector(function(vector) {
-            multicopter.commandedPosition = vector;
-            console.log(multicopter.commandedPosition);
-            callback();
+function csv(arg, callback) {
+    if (arg == undefined) {
+        stdio.question('Name of Data file', function (err, filename) {
+            exportLib.exportToCSV(data.readFile(filename), filename, callback);
         });
     } else {
-        multicopter.commandedPosition = JSON.parse(arg);
-        console.log("Commanded Position : " + arg);
-        callback();
-    }
-}
-
-/**
- * Sets the commanded velocity of the multicopter from the provided
- * 3D vector.
- * 
- * @param  {string}   arg      3D vector.
- * @param  {Function} callback Called after the velocity is set.
- */
-function comvel(arg, callback) {
-    if (arg == undefined || is3DVector(arg)) {
-        get3DVector(function(vector) {
-            multicopter.commandedVelocity = vector;
-            console.log(multicopter.commandedVelocity);
-            callback();
-        });
-    } else {
-        multicopter.commandedVelocity = JSON.parse(arg);
-        console.log("Commanded Velocity : " + arg);
-        callback();
-    }
-}
-
-/**
- * Set the commanded acceleration of the multicopter.
- * 
- * @param  {string}   arg      3D vector.
- * @param  {Function} callback Called after the velocity is set.
- */
-function comacc(arg, callback) {
-    if (arg == undefined || is3DVector(arg)) {
-        get3DVector(function(vector) {
-            multicopter.commandedAcceleration = vector;
-            console.log(multicopter.commandedAcceleration);
-            callback();
-        });
-    } else {
-        multicopter.commandedAcceleration = JSON.parse(arg);
-        console.log("Commanded Acceleration : " + arg);
-        callback();
+        exportLib.exportToCSV(data.readFile(arg), arg, callback);
     }
 }
 
