@@ -52,6 +52,25 @@ function get3DVector(callback) {
 }
 
 /**
+ * Checks that the string provided is a 3D vector. The expected string is of format:
+ * "{x:1.0,y:1.0,z:1.0}"
+ * It should not contain any spaces.
+ * 
+ * @param  {string} str The string to match
+ * @return {boolean}    True if the the string is a 3D vector.
+ */
+function is3DVector(str) {
+    try {
+        var vector = JSON.parse(str);
+        return typeof(vector.x) == 'number' 
+            && typeof(vector.y) == 'number' 
+            && typeof(vector.z) == 'number';
+    } catch(err) {
+        return false;
+    }
+}
+
+/**
  * The message can be a two part message, a primary part that controls
  * the switch case, and a secondary part that passes information to the
  * process running inside of the case.
@@ -132,25 +151,43 @@ function sendCommand(message, callback) {
             }
             break;
         case 'compos':
-            get3DVector(function(vector) {
-                multicopter.commandedPosition = vector;
-                console.log(multicopter.commandedPosition);
+            if (secondaryMessage == undefined || is3DVector(secondaryMessage)) {
+                get3DVector(function(vector) {
+                    multicopter.commandedPosition = vector;
+                    console.log(multicopter.commandedPosition);
+                    callback();
+                });
+            } else {
+                multicopter.commandedPosition = JSON.parse(secondaryMessage);
+                console.log("Commanded Position : " + secondaryMessage);
                 callback();
-            });
+            }
             break;
         case 'comvel':
-            get3DVector(function(vector) {
-                multicopter.commandedVelocity = vector;
-                console.log(multicopter.commandedVelocity);
+            if (secondaryMessage == undefined || is3DVector(secondaryMessage)) {
+                get3DVector(function(vector) {
+                    multicopter.commandedVelocity = vector;
+                    console.log(multicopter.commandedVelocity);
+                    callback();
+                });
+            } else {
+                multicopter.commandedVelocity = JSON.parse(secondaryMessage);
+                console.log("Commanded Velocity : " + secondaryMessage);
                 callback();
-            });
+            }
             break;
         case 'comacc':
-            get3DVector(function(vector) {
-                multicopter.commandedAcceleration = vector;
-                console.log(multicopter.commandedAcceleration);
+            if (secondaryMessage == undefined || is3DVector(secondaryMessage)) {
+                get3DVector(function(vector) {
+                    multicopter.commandedAcceleration = vector;
+                    console.log(multicopter.commandedAcceleration);
+                    callback();
+                });
+            } else {
+                multicopter.commandedAcceleration = JSON.parse(secondaryMessage);
+                console.log("Commanded Acceleration : " + secondaryMessage);
                 callback();
-            });
+            }
             break;
         default:
             if (isInitalized) {
