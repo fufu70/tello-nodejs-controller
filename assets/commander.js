@@ -2,6 +2,7 @@ var tello = require('./tello.js');
 var exportInterface = require('./interface/export.js');
 var dataInterface = require('./interface/data.js');
 var multicopterInterface = require('./interface/multicopter.js');
+var kemperInterface = require('./interface/kemper.js');
 var stdio = require('stdio');
 var isInitalized = false;
 var isQuitting = false;
@@ -19,6 +20,7 @@ var commandFunctions = {
     compos:   multicopterInterface.setCommandedPosition,
     comvel:   multicopterInterface.setCommandedVelocity,
     comacc:   multicopterInterface.setCommandedAcceleration,
+    kemper:   kemperInterface.stream,
 };
 
 /**
@@ -34,7 +36,6 @@ function readCommandFile(filename) {
         if (currentIndex >= commandArr.length) {
             getCommand();
         } else {
-
             console.log("call " + commandArr[currentIndex]);
             sendCommand(commandArr[currentIndex], function() {
                 currentIndex ++;

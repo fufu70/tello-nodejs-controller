@@ -121,13 +121,13 @@ function calculateAngularCommandedVelocity(time) {
 
 function calculateAngularCommandedTao() {
 
-    double phiTaoCommanded = ANGULAR_PROPORTIONAL.phi * (angularCommandedVelocity.phi - euler.angularPosition.phi);
+    var phiTaoCommanded = ANGULAR_PROPORTIONAL.phi * (angularCommandedVelocity.phi - euler.angularPosition.phi);
     phiTaoCommanded += ANGULAR_DERIVTIVE.phi * (angularCommandedVelocity.phi - euler.angularVelocity.phi);
 
-    double thetaTaoCommanded = ANGULAR_PROPORTIONAL.theta * (angularCommandedVelocity.theta - euler.angularPosition.theta);
+    var thetaTaoCommanded = ANGULAR_PROPORTIONAL.theta * (angularCommandedVelocity.theta - euler.angularPosition.theta);
     thetaTaoCommanded += ANGULAR_DERIVTIVE.theta * (angularCommandedVelocity.theta - euler.angularVelocity.theta);
                         
-    double psiTaoCommanded = ANGULAR_PROPORTIONAL.psi * (angularCommandedVelocity.psi - euler.angularPosition.psi);
+    var psiTaoCommanded = ANGULAR_PROPORTIONAL.psi * (angularCommandedVelocity.psi - euler.angularPosition.psi);
     psiTaoCommanded += ANGULAR_DERIVTIVE.psi * (angularCommandedVelocity.psi - euler.angularVelocity.psi);
     
     angularCommandedTao.phi = phiTaoCommanded * multicopter.inertia.x;

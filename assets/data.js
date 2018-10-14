@@ -41,7 +41,6 @@ function saveData(prependToFilename, callback) {
 
     for (var i = 0; i < recording.length; i ++) {
         recordingStringArr.push(JSON.stringify(recording[i]));
-
     }
 
     fs.writeFile(getFileName(prependToFilename + Date.now()), "[" + recordingStringArr.join(',') + "]", function(err) {
