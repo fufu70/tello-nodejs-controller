@@ -1,24 +1,24 @@
-var data = require('./data.js');
 var tello = require('./tello.js');
-var exportLib = require('./export.js');
-var multicopter = require('./multicopter.js');
+var exportInterface = require('./interface/export.js');
+var dataInterface = require('./interface/data.js');
+var multicopterInterface = require('./interface/multicopter.js');
 var stdio = require('stdio');
 var isInitalized = false;
 var isQuitting = false;
 var commandFunctions = {
     quit:     quit,
-    state:    state,
-    position: position,
-    start:    start,
-    stop:     stop,
-    reset:    reset,
-    save:     save,
-    csv:      csv,
     read:     read,
     init:     init,
-    compos:   multicopter.setCommandedPosition,
-    comvel:   multicopter.setCommandedVelocity,
-    comacc:   multicopter.setCommandedAcceleration,
+    csv:      exportInterface.csv,
+    state:    dataInterface.state,
+    position: dataInterface.position,
+    start:    dataInterface.start,
+    stop:     dataInterface.stop,
+    reset:    dataInterface.reset,
+    save:     dataInterface.save,
+    compos:   multicopterInterface.setCommandedPosition,
+    comvel:   multicopterInterface.setCommandedVelocity,
+    comacc:   multicopterInterface.setCommandedAcceleration,
 };
 
 /**
@@ -60,92 +60,6 @@ function quit(arg, callback) {
 }
 
 /**
- * Outputs the current state of the tello
- * 
- * @param  {string}   arg      Ignored
- * @param  {Function} callback Called after the action is complete
- */
-function state(arg, callback) {
-    console.log(data.currentState());
-    callback();
-}
-
-/**
- * Outputs the current position of the tello
- * 
- * @param  {string}   arg      Ignored
- * @param  {Function} callback Called after the action is complete
- */
-function position(arg, callback) {
-    console.log(data.currentPosition());
-    callback();
-}
-
-/**
- * Starts recording the tello's data stream.
- * 
- * @param  {string}   arg      Ignored
- * @param  {Function} callback Called after the action is complete
- */
-function start(arg, callback) {
-    data.startRecording();
-    callback();
-}
-
-/**
- * Stops recording the tello's data stream.
- * 
- * @param  {string}   arg      Ignored
- * @param  {Function} callback Called after the action is complete
- */
-function stop(arg, callback) {
-    data.stopRecording();
-    callback();
-}
-
-/**
- * Clears the tello's data stream collected.
- * 
- * @param  {string}   arg      Ignored
- * @param  {Function} callback Called after the action is complete
- */
-function reset(arg, callback) {
-    data.resetRecording();
-    callback();
-}
-
-/**
- * Saves the tello's collected data stream. Stores the stream as a JSON
- * into the provided file. The file is stored in the "data" directory.
- * 
- * @param  {string}   filename The filename to save to.
- * @param  {Function} callback Called after the action is complete
- */
-function save(filename, callback) {
-    if (filename == undefined) {
-        data.saveRecording("", callback);
-    } else {
-        data.saveRecording(filename, callback);
-    }
-}
-
-/**
- * Converts the provided data file to a csv file in the "exports" directory.
- * 
- * @param  {string}   arg      The name of the data file.
- * @param  {Function} callback Called after the action is complete.
- */
-function csv(arg, callback) {
-    if (arg == undefined) {
-        stdio.question('Name of Data file', function (err, filename) {
-            exportLib.exportToCSV(data.readFile(filename), filename, callback);
-        });
-    } else {
-        exportLib.exportToCSV(data.readFile(arg), arg, callback);
-    }
-}
-
-/**
  * Reads a command file from the "commands" directory.
  * 
  * @param  {string}   arg      The "commands" filename.
@@ -177,22 +91,6 @@ function init(arg, callback) {
         });
     } else {
         console.log("Tello is already initalized. To initialize again, run quit and run the program again");
-    }
-}
-
-/**
- * Converts the provided data file to a csv file in the "exports" directory.
- * 
- * @param  {string}   arg      The name of the data file.
- * @param  {Function} callback Called after the action is complete.
- */
-function csv(arg, callback) {
-    if (arg == undefined) {
-        stdio.question('Name of Data file', function (err, filename) {
-            exportLib.exportToCSV(data.readFile(filename), filename, callback);
-        });
-    } else {
-        exportLib.exportToCSV(data.readFile(arg), arg, callback);
     }
 }
 
