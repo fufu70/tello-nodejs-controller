@@ -1,3 +1,4 @@
+const localMathLib = require('./math.js');
 const multicopter = require('./multicopter.js');
 const euler = require('./euler.js');
 
@@ -41,12 +42,6 @@ var psiCommandedPosition = 0;
 var phiCommandedPositionPrevious = 0;
 var thetaCommandedPositionPrevious = 0;
 var psiCommandedPositionPrevious = 0;
-
-function degrees_to_radians(degrees)
-{
-  var pi = Math.PI;
-  return degrees * (pi/180);
-}
 
 function setSuggestedControl(time) {
     calculateIntegralError(time);
@@ -97,14 +92,14 @@ function calculateAngularCommandedPosition() {
     var desiredThetaAngle = linearCommandedAccelerations.y * Math.cos(euler.angularPosition.psi);
     desiredThetaAngle += linearCommandedAccelerations.x * Math.sin(euler.angularPosition.psi);
     desiredThetaAngle = desiredThetaAngle / ANGLE_DIVISOR;
-    var thetaCommandNumerator = Math.sign(desiredThetaAngle) * Math.sin(degrees_to_radians(Math.abs(desiredThetaAngle)));
+    var thetaCommandNumerator = Math.sign(desiredThetaAngle) * Math.sin(localMathLib.toRadians(Math.abs(desiredThetaAngle)));
     thetaCommandedPosition = thetaCommandNumerator;
 
 
     var desiredPhiAngle = linearCommandedAccelerations.x * Math.cos(euler.angularPosition.psi);
     desiredPhiAngle += linearCommandedAccelerations.y * Math.sin(euler.angularPosition.psi);
     desiredPhiAngle = desiredPhiAngle / ANGLE_DIVISOR;
-    var phiCommandNumerator = Math.sign(desiredPhiAngle) * Math.sin(degrees_to_radians(Math.abs(desiredPhiAngle)));
+    var phiCommandNumerator = Math.sign(desiredPhiAngle) * Math.sin(localMathLib.toRadians(Math.abs(desiredPhiAngle)));
     phiCommandedPosition = phiCommandNumerator;
 
     var thrustComm = linearCommandedAccelerations.x * (

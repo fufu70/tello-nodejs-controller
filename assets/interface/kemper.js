@@ -5,7 +5,6 @@ const kemper = require('./../kemper.js');
 
 function streamData(data) {
     for (var i = 0; i < data.length; i ++) {
-        console.log(data[i]);
         euler.update(data[i]);
         kemper.update(data[i].time);
     }
