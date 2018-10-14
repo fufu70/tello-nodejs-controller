@@ -1,3 +1,6 @@
+const multicopter = require('./multicopter.js');
+const euler = require('./euler.js');
+
 const DEFAULT_VALUE = 0.0;
 const MAXIMUM_LATT_COMM_ACCELERATION = 50.0;
 const MAXIMUM_Z_COMM_ACCELERATION = 70.0;
@@ -14,9 +17,7 @@ const LINEAR_INTEGRAL = { x: 0.0, y: 0.0, z: 3.0};
 const ANGULAR_PROPORTIONAL = { x: 15.0, y: 15.0, z: 0.5};
 const ANGULAR_DERIVTIVE = { x: 50.0, y: 50.0, z: 5.0};
 const ANGULAR_INTEGRAL = { x: 0.0, y: 0.0, z: 0.0};
-
-var multicopter = ('./multicopter.js');
-var euler = require('./euler.js');
+const GRAVITY = { x: 0.0, y: 0.0, z: -9.81};
 var linearCommandedPosition = {
     x: 0,
     y: 0,
@@ -41,6 +42,12 @@ var phiCommandedPositionPrevious = 0;
 var thetaCommandedPositionPrevious = 0;
 var psiCommandedPositionPrevious = 0;
 
+function degrees_to_radians(degrees)
+{
+  var pi = Math.PI;
+  return degrees * (pi/180);
+}
+
 function setSuggestedControl(time) {
     calculateIntegralError(time);
     calculateLinearCommandedAcceleration();
@@ -54,6 +61,7 @@ function setSuggestedControl(time) {
 }
 
 function calculateIntegralError(time) {
+    
     integralLinearError.x = integralLinearError.x + ((multicopter.commandedPosition.x - euler.linearPosition.x) * time);
     integralLinearError.y = integralLinearError.y + ((multicopter.commandedPosition.y - euler.linearPosition.y) * time);
     integralLinearError.z = integralLinearError.z + ((multicopter.commandedPosition.z - euler.linearPosition.z) * time);
@@ -89,14 +97,14 @@ function calculateAngularCommandedPosition() {
     var desiredThetaAngle = linearCommandedAccelerations.y * Math.cos(euler.angularPosition.psi);
     desiredThetaAngle += linearCommandedAccelerations.x * Math.sin(euler.angularPosition.psi);
     desiredThetaAngle = desiredThetaAngle / ANGLE_DIVISOR;
-    var thetaCommandNumerator = Math.signum(desiredThetaAngle) * Math.sin(Math.toRadians(Math.abs(desiredThetaAngle)));
+    var thetaCommandNumerator = Math.sign(desiredThetaAngle) * Math.sin(degrees_to_radians(Math.abs(desiredThetaAngle)));
     thetaCommandedPosition = thetaCommandNumerator;
 
 
     var desiredPhiAngle = linearCommandedAccelerations.x * Math.cos(euler.angularPosition.psi);
     desiredPhiAngle += linearCommandedAccelerations.y * Math.sin(euler.angularPosition.psi);
     desiredPhiAngle = desiredPhiAngle / ANGLE_DIVISOR;
-    var phiCommandNumerator = Math.signum(desiredPhiAngle) * Math.sin(Math.toRadians(Math.abs(desiredPhiAngle)));
+    var phiCommandNumerator = Math.sign(desiredPhiAngle) * Math.sin(degrees_to_radians(Math.abs(desiredPhiAngle)));
     phiCommandedPosition = phiCommandNumerator;
 
     var thrustComm = linearCommandedAccelerations.x * (
@@ -105,7 +113,7 @@ function calculateAngularCommandedPosition() {
     thrustComm += linearCommandedAccelerations.y * ((Math.sin(euler.angularPosition.theta)
                         * Math.sin(euler.angularPosition.psi) * Math.cos(euler.angularPosition.phi))
                     - (Math.cos(euler.angularPosition.psi * Math.sin(euler.angularPosition.phi))));
-    thrustComm += (linearCommandedAccelerations.z + Acceleration.GRAVITY[Environment.VALUE_Z])
+    thrustComm += (linearCommandedAccelerations.z + GRAVITY.z)
                     * (Math.cos(euler.angularPosition.theta)
                             * Math.cos(euler.angularPosition.phi));    
     thrustCommand = multicopter.mass * thrustComm;

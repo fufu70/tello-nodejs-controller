@@ -1,5 +1,6 @@
 var tello = require('./tello.js');
 var exportInterface = require('./interface/export.js');
+var data = require('./data.js');
 var dataInterface = require('./interface/data.js');
 var multicopterInterface = require('./interface/multicopter.js');
 var kemperInterface = require('./interface/kemper.js');
