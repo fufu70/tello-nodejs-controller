@@ -35,15 +35,15 @@ function recordData() {
     recording.push(Object.assign(state, euler.motion));
 }
 
-function saveData(prependToFilename, callback) {
+function saveData(data, prependToFilename, callback) {
 
-    var recordingStringArr = [];
+    var dataStringArr = [];
 
-    for (var i = 0; i < recording.length; i ++) {
-        recordingStringArr.push(JSON.stringify(recording[i]));
+    for (var i = 0; i < data.length; i ++) {
+        dataStringArr.push(JSON.stringify(data[i]));
     }
 
-    fs.writeFile(getFileName(prependToFilename + Date.now()), "[" + recordingStringArr.join(',') + "]", function(err) {
+    fs.writeFile(getFileName(prependToFilename + Date.now()), "[" + dataStringArr.join(',') + "]", function(err) {
         if(err) {
             return console.log(err);
         }
@@ -76,7 +76,10 @@ module.exports = {
         return JSON.parse(fs.readFileSync(getFileName(filename), 'utf8'));
     },
     recording: recording,
-    saveRecording: saveData,
+    saveRecording: function(prependToFilename, callback) {
+        saveData(recording, prependToFilename, callback);
+    },
+    saveData: saveData,
     getFileName: getFileName,
     currentState: function() {
         if (stateString) {

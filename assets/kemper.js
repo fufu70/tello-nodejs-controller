@@ -141,5 +141,9 @@ function calculateAngularCommandedTao() {
 module.exports = {
     update: function(time) {
         setSuggestedControl(time);
-    }
+    },
+    thrustCommand: thrustCommand,
+    phiCommand: angularCommandedTao.phi,
+    thetaCommand: angularCommandedTao.theta,
+    psiCommand: angularCommandedTao.psi,
 };
