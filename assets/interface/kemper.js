@@ -18,12 +18,7 @@ function getSuggestedControls(data) {
     for (var i = 0; i < data.length; i ++) {
         euler.update(data[i]);
         kemper.update(data[i].time);
-        suggested_controls.push({
-            thrustCommand: kemper.thrustCommand,
-            phiCommand: kemper.phiCommand,
-            thetaCommand: kemper.thetaCommand,
-            psiCommand: kemper.psiCommand,
-        });
+        suggested_controls.push(kemper.getState());
     }
 
     return suggested_controls;

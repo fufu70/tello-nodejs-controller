@@ -15,9 +15,9 @@ const LINEAR_PROPORTIONAL = { x: 7.3, y: 7.3, z: 10.0};
 const LINEAR_DERIVATIVE_VELOCITY = { x: 25.0, y: 35.0, z: 20.0};
 const LINEAR_DERIVATIVE_ACCELERATION = { x: 0.0, y: 0.0, z: 0.0};
 const LINEAR_INTEGRAL = { x: 0.0, y: 0.0, z: 3.0};
-const ANGULAR_PROPORTIONAL = { x: 15.0, y: 15.0, z: 0.5};
-const ANGULAR_DERIVTIVE = { x: 50.0, y: 50.0, z: 5.0};
-const ANGULAR_INTEGRAL = { x: 0.0, y: 0.0, z: 0.0};
+const ANGULAR_PROPORTIONAL = { phi: 15.0, theta: 15.0, psi: 0.5};
+const ANGULAR_DERIVTIVE = { phi: 50.0, theta: 50.0, psi: 5.0};
+const ANGULAR_INTEGRAL = { phi: 0.0, theta: 0.0, psi: 0.0};
 const GRAVITY = { x: 0.0, y: 0.0, z: -9.81};
 var linearCommandedPosition = {
     x: 0,
@@ -126,7 +126,7 @@ function calculateAngularCommandedTao() {
 
     var phiTaoCommanded = ANGULAR_PROPORTIONAL.phi * (angularCommandedVelocity.phi - euler.angularPosition.phi);
     phiTaoCommanded += ANGULAR_DERIVTIVE.phi * (angularCommandedVelocity.phi - euler.angularVelocity.phi);
-
+    
     var thetaTaoCommanded = ANGULAR_PROPORTIONAL.theta * (angularCommandedVelocity.theta - euler.angularPosition.theta);
     thetaTaoCommanded += ANGULAR_DERIVTIVE.theta * (angularCommandedVelocity.theta - euler.angularVelocity.theta);
                         
@@ -146,4 +146,26 @@ module.exports = {
     phiCommand: angularCommandedTao.phi,
     thetaCommand: angularCommandedTao.theta,
     psiCommand: angularCommandedTao.psi,
+    getState: function() {
+        return {
+            thrustCommand: thrustCommand,
+            phiCommand: angularCommandedTao.phi,
+            thetaCommand: angularCommandedTao.theta,
+            psiCommand: angularCommandedTao.psi,
+            thetaCommandedPosition: thetaCommandedPosition,
+            phiCommandedPosition: phiCommandedPosition,
+            integralLinearError_x: integralLinearError.x,
+            integralLinearError_y: integralLinearError.y,
+            integralLinearError_z: integralLinearError.z,
+            integralAngularError_phi: integralAngularError.phi,
+            integralAngularError_theta: integralAngularError.theta,
+            integralAngularError_psi: integralAngularError.psi,
+            linearCommandedAccelerations_x: linearCommandedAccelerations.x,
+            linearCommandedAccelerations_y: linearCommandedAccelerations.y,
+            linearCommandedAccelerations_z: linearCommandedAccelerations.z,
+            angularCommandedVelocity_phi: angularCommandedVelocity.phi,
+            angularCommandedVelocity_theta: angularCommandedVelocity.theta,
+            angularCommandedVelocity_psi: angularCommandedVelocity.psi,
+        };
+    }
 };
