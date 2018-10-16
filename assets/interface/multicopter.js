@@ -40,13 +40,27 @@ function is3DVector(str) {
     }
 }
 
-function setCommandedValue(arg, callback) {
+/**
+ * Sets the xyz values of the provided reference and then calls the
+ * callback function.
+ * 
+ * @param {string}   arg       Argument provided by the user
+ * @param {Object}   reference An object with xyz values
+ * @param {Function} callback  The function to callback on completion.
+ */
+function setCommandedValue(arg, reference, callback) {
+
+    function setReference(vector) {
+        reference.x = vector.x;
+        reference.y = vector.y;
+        reference.z = vector.z;
+        callback(vector);
+    }
+
     if (arg == undefined || !is3DVector(arg)) {
-        get3DVector(function(vector) {
-            callback(vector);
-        });
+        get3DVector(setReference);
     } else {
-        callback(JSON.parse(arg));
+        setReference(JSON.parse(arg));
     }
 }
 
@@ -58,9 +72,8 @@ function setCommandedValue(arg, callback) {
  * @param  {Function} callback Called after the position is set.
  */
 function setCommandedPosition(arg, callback) {
-    setCommandedValue(arg, function(value) {
-        multicopter.commandedPosition = value;
-        console.log("Commanded Position : " + JSON.stringify(multicopter.commandedPosition));
+    setCommandedValue(arg, multicopter.commandedPosition, function(value) {
+        console.log("Set Commanded Position : " + JSON.stringify(value));
         callback();
     });
 }
@@ -73,9 +86,9 @@ function setCommandedPosition(arg, callback) {
  * @param  {Function} callback Called after the velocity is set.
  */
 function setCommandedVelocity(arg, callback) {
-    setCommandedValue(arg, callback, function(value) {
-        multicopter.commandedVelocity = value;
-        console.log("Commanded Velocity : " + value);
+    setCommandedValue(arg, multicopter.commandedVelocity, function(value) {
+        console.log("Set Commanded Velocity : " + JSON.stringify(value));
+        callback();
     });
 }
 
@@ -86,9 +99,9 @@ function setCommandedVelocity(arg, callback) {
  * @param  {Function} callback Called after the velocity is set.
  */
 function setCommandedAcceleration(arg, callback) {
-    setCommandedValue(arg, callback, function(value) {
-        multicopter.commandedAcceleration = value;
-        console.log("Commanded Acceleration : " + value);
+    setCommandedValue(arg, multicopter.commandedAcceleration, function(value) {
+        console.log("Set Commanded Acceleration : " + JSON.stringify(value));
+        callback();
     });
 }
 
