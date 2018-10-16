@@ -7,6 +7,7 @@ var stateString = undefined;
 var isListening = false;
 var isRecording = false;
 var recording = [];
+var lastFileSaved = "";
 
 function init(callback) {
 
@@ -42,12 +43,13 @@ function saveData(data, prependToFilename, callback) {
     for (var i = 0; i < data.length; i ++) {
         dataStringArr.push(JSON.stringify(data[i]));
     }
+    var fileName = prependToFilename + Date.now();
 
-    fs.writeFile(getFileName(prependToFilename + Date.now()), "[" + dataStringArr.join(',') + "]", function(err) {
+    fs.writeFile(getFileName(fileName), "[" + dataStringArr.join(',') + "]", function(err) {
         if(err) {
             return console.log(err);
         }
-
+        lastFileSaved = fileName;
         console.log("The file was saved!");
         callback();
     });
@@ -81,6 +83,9 @@ module.exports = {
     },
     saveData: saveData,
     getFileName: getFileName,
+    getLastFileSaved: function() {
+        return lastFileSaved;
+    },
     currentState: function() {
         if (stateString) {
             return getState();

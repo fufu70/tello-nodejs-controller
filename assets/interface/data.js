@@ -1,5 +1,6 @@
 const stdio = require('stdio');
 const data = require('./../data.js');
+const exportInterface = require('./export.js');
 
 /**
  * Outputs the current state of the tello
@@ -60,14 +61,32 @@ function reset(arg, callback) {
  * Saves the tello's collected data stream. Stores the stream as a JSON
  * into the provided file. The file is stored in the "data" directory.
  * 
- * @param  {string}   filename The filename to save to.
+ * @param  {string}   arg      The filename to save to and if the recording
+ *                             should be exported. Comma seperated.
  * @param  {Function} callback Called after the action is complete
  */
-function save(filename, callback) {
-    if (filename == undefined) {
-        data.saveRecording("", callback);
+function save(arg, callback) {
+    if (arg == undefined) {
+        data.saveRecording("", function() {
+            stdio.question('Export to csv? y/N', function (err, doExport) {
+                if (doExport == 'y') {
+                    exportInterface.csv(data.getLastFileSaved(), callback);
+                } else {
+                    callback();   
+                }
+            });
+        });
     } else {
-        data.saveRecording(filename, callback);
+        var args = arg.split(",");
+        var filename = args[0];
+        var doExport = (args.length >=2) ? args[1] : undefined;
+        data.saveRecording(filename, function() {
+            if (doExport == 'y') {
+                exportInterface.csv(data.getLastFileSaved(), callback);
+            } else {
+                callback();   
+            }
+        });
     }
 }
 

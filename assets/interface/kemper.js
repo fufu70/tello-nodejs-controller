@@ -3,6 +3,7 @@ const data = require('./../data.js');
 const euler = require('./../euler.js');
 const kemper = require('./../kemper.js');
 const multicopter = require('./../multicopter.js');
+const exportInterface = require('./export.js');
 
 /**
  * Streams the data from the provided state file and feeds it
@@ -33,8 +34,18 @@ module.exports = {
                 data.saveData(controls, filename + '_controls_', callback);
             });
         } else {
-            var controls = getSuggestedControls(data.readFile(arg));
-            data.saveData(controls, arg + '_controls_', callback);
+            var args = arg.split(",");
+            var filename = args[0];
+            var doExport = (args.length >=2) ? args[1] : undefined;
+            var controls = getSuggestedControls(data.readFile(filename));
+            data.saveData(controls, filename + '_controls_', function() {
+                if (doExport == 'y') {
+                    exportInterface.csv(data.getLastFileSaved(), callback);
+                } else {
+                    callback();   
+                }
+            });
+
         }
     }
 }
