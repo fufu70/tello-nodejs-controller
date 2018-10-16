@@ -1,5 +1,6 @@
 const stdio = require('stdio');
-const exportLib = require('./../export.js')
+const exportLib = require('./../export.js');
+const data = require('./../data.js')
 
 /**
  * Converts the provided data file to a csv file in the "exports" directory.

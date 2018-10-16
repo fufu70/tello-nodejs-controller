@@ -41,7 +41,7 @@ function is3DVector(str) {
 }
 
 function setCommandedValue(arg, callback) {
-    if (arg == undefined || is3DVector(arg)) {
+    if (arg == undefined || !is3DVector(arg)) {
         get3DVector(function(vector) {
             callback(vector);
         });

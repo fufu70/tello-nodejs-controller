@@ -2,7 +2,7 @@ const stdio = require('stdio');
 const data = require('./../data.js');
 const euler = require('./../euler.js');
 const kemper = require('./../kemper.js');
-var suggested_controls
+const multicopter = require('./../multicopter.js');
 
 /**
  * Streams the data from the provided state file and feeds it
@@ -18,7 +18,8 @@ function getSuggestedControls(data) {
     for (var i = 0; i < data.length; i ++) {
         euler.update(data[i]);
         kemper.update(data[i].time);
-        suggested_controls.push(kemper.getState());
+        var obj = Object.assign(kemper.getState(), euler.motion);
+        suggested_controls.push(Object.assign(obj, multicopter.getState()));
     }
 
     return suggested_controls;

@@ -13,14 +13,14 @@ function exportToCSV(data, fileName, callback) {
 
     var csvStringArr = [];
     var keys = Object.keys(data[0]);
-    csvStringArr.push(keys.join(','));
+    csvStringArr.push('index,' + keys.join(','));
 
     for (var i = 0; i < data.length; i ++) {
         var dataArr = [];
         for (var j = 0; j < keys.length; j ++) {
             dataArr.push(data[i][keys[j]]);
         }
-        csvStringArr.push(dataArr.join(','));
+        csvStringArr.push(i + ',' + dataArr.join(','));
 
     }
 

@@ -22,4 +22,17 @@ module.exports = {
     commandedVelocity: commandedVelocity,
     commandedAcceleration: commandedAcceleration,
     inertia: inertia,
+    getState: function() {
+        return {
+            commandedPosition_x: commandedPosition.x,
+            commandedPosition_y: commandedPosition.y,
+            commandedPosition_z: commandedPosition.z,
+            commandedVelocity_x: commandedVelocity.x,
+            commandedVelocity_y: commandedVelocity.y,
+            commandedVelocity_z: commandedVelocity.z,
+            commandedAcceleration_x: commandedAcceleration.x,
+            commandedAcceleration_y: commandedAcceleration.y,
+            commandedAcceleration_z: commandedAcceleration.z,
+        };
+    }
 }

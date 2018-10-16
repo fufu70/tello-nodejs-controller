@@ -11,12 +11,12 @@ const LATT_DIVISION = 0.7;
 const DRAG_COEFFICIENT = 1.0;
 const SPEED_MULTIPLIER = 1.0;
 const ANGLE_DIVISOR = 10.0;
-const LINEAR_PROPORTIONAL = { x: 7.3, y: 7.3, z: 10.0};
-const LINEAR_DERIVATIVE_VELOCITY = { x: 25.0, y: 35.0, z: 20.0};
+const LINEAR_PROPORTIONAL = { x: .73, y: .73, z: 1.00};
+const LINEAR_DERIVATIVE_VELOCITY = { x: 2.50, y: 3.50, z: 2.00};
 const LINEAR_DERIVATIVE_ACCELERATION = { x: 0.0, y: 0.0, z: 0.0};
-const LINEAR_INTEGRAL = { x: 0.0, y: 0.0, z: 3.0};
-const ANGULAR_PROPORTIONAL = { phi: 15.0, theta: 15.0, psi: 0.5};
-const ANGULAR_DERIVTIVE = { phi: 50.0, theta: 50.0, psi: 5.0};
+const LINEAR_INTEGRAL = { x: 0.0, y: 0.0, z: 0.0};
+const ANGULAR_PROPORTIONAL = { phi: 1.50, theta: 1.50, psi: 0.5};
+const ANGULAR_DERIVTIVE = { phi: 5.00, theta: 5.00, psi: .50};
 const ANGULAR_INTEGRAL = { phi: 0.0, theta: 0.0, psi: 0.0};
 const GRAVITY = { x: 0.0, y: 0.0, z: -9.81};
 var linearCommandedPosition = {
@@ -126,7 +126,7 @@ function calculateAngularCommandedTao() {
 
     var phiTaoCommanded = ANGULAR_PROPORTIONAL.phi * (angularCommandedVelocity.phi - euler.angularPosition.phi);
     phiTaoCommanded += ANGULAR_DERIVTIVE.phi * (angularCommandedVelocity.phi - euler.angularVelocity.phi);
-    
+
     var thetaTaoCommanded = ANGULAR_PROPORTIONAL.theta * (angularCommandedVelocity.theta - euler.angularPosition.theta);
     thetaTaoCommanded += ANGULAR_DERIVTIVE.theta * (angularCommandedVelocity.theta - euler.angularVelocity.theta);
                         
