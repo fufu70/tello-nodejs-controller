@@ -11,12 +11,14 @@ const LATT_DIVISION = 0.7;
 const DRAG_COEFFICIENT = 1.0;
 const SPEED_MULTIPLIER = 1.0;
 const ANGLE_DIVISOR = 10.0;
-const LINEAR_PROPORTIONAL = { x: .73, y: .73, z: 1.00};
-const LINEAR_DERIVATIVE_VELOCITY = { x: 2.50, y: 3.50, z: 2.00};
-const LINEAR_DERIVATIVE_ACCELERATION = { x: 0.0, y: 0.0, z: 0.0};
+const LINEAR_PROPORTIONAL = { x: 1.0, y: 1.0, z: 1.0};
+const LINEAR_DERIVATIVE_VELOCITY = { x: 0.0, y: 0.0, z: 0.2};
+// const LINEAR_DERIVATIVE_VELOCITY = { x: 2.50, y: 3.50, z: 2.00};
+const LINEAR_DERIVATIVE_ACCELERATION = { x: 0.0, y: 0.0, z: 0.1};
 const LINEAR_INTEGRAL = { x: 0.0, y: 0.0, z: 0.0};
 const ANGULAR_PROPORTIONAL = { phi: 1.50, theta: 1.50, psi: 0.5};
-const ANGULAR_DERIVTIVE = { phi: 5.00, theta: 5.00, psi: .50};
+const ANGULAR_DERIVTIVE = { phi: 0.0, theta: 0.0, psi: 0.0};
+// const ANGULAR_DERIVTIVE = { phi: 5.00, theta: 5.00, psi: .50};
 const ANGULAR_INTEGRAL = { phi: 0.0, theta: 0.0, psi: 0.0};
 const GRAVITY = { x: 0.0, y: 0.0, z: -9.81};
 var linearCommandedPosition = {
@@ -61,9 +63,9 @@ function calculateIntegralError(time) {
     integralLinearError.y = integralLinearError.y + ((multicopter.commandedPosition.y - euler.linearPosition.y) * time);
     integralLinearError.z = integralLinearError.z + ((multicopter.commandedPosition.z - euler.linearPosition.z) * time);
 
-    integralAngularError.phi = integralAngularError.phi + ((phiCommandedPosition - euler.angularPosition.phi) * time);
-    integralAngularError.theta = integralAngularError.theta + ((thetaCommandedPosition - euler.angularPosition.theta) * time);
-    integralAngularError.psi = integralAngularError.psi + ((psiCommandedPosition - euler.angularPosition.psi) * time);
+    integralAngularError.phi = integralAngularError.phi + ((phiCommandedPosition - localMathLib.toRadians(euler.angularPosition.phi)) * time);
+    integralAngularError.theta = integralAngularError.theta + ((thetaCommandedPosition - localMathLib.toRadians(euler.angularPosition.theta)) * time);
+    integralAngularError.psi = integralAngularError.psi + ((psiCommandedPosition - localMathLib.toRadians(euler.angularPosition.psi)) * time);
 }
 
 function calculateLinearCommandedAcceleration() {
@@ -89,28 +91,28 @@ function calculateLinearCommandedAcceleration() {
 }
 
 function calculateAngularCommandedPosition() {
-    var desiredThetaAngle = linearCommandedAccelerations.y * Math.cos(euler.angularPosition.psi);
-    desiredThetaAngle += linearCommandedAccelerations.x * Math.sin(euler.angularPosition.psi);
+    var desiredThetaAngle = linearCommandedAccelerations.y * Math.cos(localMathLib.toRadians(euler.angularPosition.psi));
+    desiredThetaAngle += linearCommandedAccelerations.x * Math.sin(localMathLib.toRadians(euler.angularPosition.psi));
     desiredThetaAngle = desiredThetaAngle / ANGLE_DIVISOR;
     var thetaCommandNumerator = Math.sign(desiredThetaAngle) * Math.sin(localMathLib.toRadians(Math.abs(desiredThetaAngle)));
     thetaCommandedPosition = thetaCommandNumerator;
 
 
-    var desiredPhiAngle = linearCommandedAccelerations.x * Math.cos(euler.angularPosition.psi);
-    desiredPhiAngle += linearCommandedAccelerations.y * Math.sin(euler.angularPosition.psi);
+    var desiredPhiAngle = linearCommandedAccelerations.x * Math.cos(localMathLib.toRadians(euler.angularPosition.psi));
+    desiredPhiAngle += linearCommandedAccelerations.y * Math.sin(localMathLib.toRadians(euler.angularPosition.psi));
     desiredPhiAngle = desiredPhiAngle / ANGLE_DIVISOR;
     var phiCommandNumerator = Math.sign(desiredPhiAngle) * Math.sin(localMathLib.toRadians(Math.abs(desiredPhiAngle)));
     phiCommandedPosition = phiCommandNumerator;
 
     var thrustComm = linearCommandedAccelerations.x * (
-        (Math.sin(euler.angularPosition.theta) * Math.cos(euler.angularPosition.psi) * Math.cos(euler.angularPosition.phi))
-                            + (Math.sin(euler.angularPosition.psi * Math.sin(euler.angularPosition.phi))));
-    thrustComm += linearCommandedAccelerations.y * ((Math.sin(euler.angularPosition.theta)
-                        * Math.sin(euler.angularPosition.psi) * Math.cos(euler.angularPosition.phi))
-                    - (Math.cos(euler.angularPosition.psi * Math.sin(euler.angularPosition.phi))));
-    thrustComm += (linearCommandedAccelerations.z + GRAVITY.z)
-                    * (Math.cos(euler.angularPosition.theta)
-                            * Math.cos(euler.angularPosition.phi));    
+        (Math.sin(localMathLib.toRadians(euler.angularPosition.theta)) * Math.cos(localMathLib.toRadians(euler.angularPosition.psi)) * Math.cos(localMathLib.toRadians(euler.angularPosition.phi)))
+                            + (Math.sin(localMathLib.toRadians(euler.angularPosition.psi) * Math.sin(localMathLib.toRadians(euler.angularPosition.phi)))));
+    thrustComm += linearCommandedAccelerations.y * ((Math.sin(localMathLib.toRadians(euler.angularPosition.theta))
+                        * Math.sin(localMathLib.toRadians(euler.angularPosition.psi)) * Math.cos(localMathLib.toRadians(euler.angularPosition.phi)))
+                    - (Math.cos(localMathLib.toRadians(euler.angularPosition.psi) * Math.sin(localMathLib.toRadians(euler.angularPosition.phi)))));
+    thrustComm += (linearCommandedAccelerations.z)
+                    * (Math.cos(localMathLib.toRadians(euler.angularPosition.theta))
+                            * Math.cos(localMathLib.toRadians(euler.angularPosition.phi)));
     thrustCommand = multicopter.mass * thrustComm;
 
     psiCommandedPosition = 0;
@@ -124,13 +126,13 @@ function calculateAngularCommandedVelocity(time) {
 
 function calculateAngularCommandedTao() {
 
-    var phiTaoCommanded = ANGULAR_PROPORTIONAL.phi * (angularCommandedVelocity.phi - euler.angularPosition.phi);
+    var phiTaoCommanded = ANGULAR_PROPORTIONAL.phi * (angularCommandedVelocity.phi - localMathLib.toRadians(euler.angularPosition.phi));
     phiTaoCommanded += ANGULAR_DERIVTIVE.phi * (angularCommandedVelocity.phi - euler.angularVelocity.phi);
 
-    var thetaTaoCommanded = ANGULAR_PROPORTIONAL.theta * (angularCommandedVelocity.theta - euler.angularPosition.theta);
+    var thetaTaoCommanded = ANGULAR_PROPORTIONAL.theta * (angularCommandedVelocity.theta - localMathLib.toRadians(euler.angularPosition.theta));
     thetaTaoCommanded += ANGULAR_DERIVTIVE.theta * (angularCommandedVelocity.theta - euler.angularVelocity.theta);
                         
-    var psiTaoCommanded = ANGULAR_PROPORTIONAL.psi * (angularCommandedVelocity.psi - euler.angularPosition.psi);
+    var psiTaoCommanded = ANGULAR_PROPORTIONAL.psi * (angularCommandedVelocity.psi - localMathLib.toRadians(euler.angularPosition.psi));
     psiTaoCommanded += ANGULAR_DERIVTIVE.psi * (angularCommandedVelocity.psi - euler.angularVelocity.psi);
     
     angularCommandedTao.phi = phiTaoCommanded * multicopter.inertia.x;
