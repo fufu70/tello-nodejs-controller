@@ -10,7 +10,7 @@ const THRUST_DIVISION = 1.0;
 const LATT_DIVISION = 0.7;
 const DRAG_COEFFICIENT = 1.0;
 const SPEED_MULTIPLIER = 1.0;
-const ANGLE_DIVISOR = 10.0;
+const ANGLE_DIVISOR = 1.0;
 const LINEAR_PROPORTIONAL = { x: 1.0, y: 1.0, z: 1.0};
 const LINEAR_DERIVATIVE_VELOCITY = { x: 0.0, y: 0.0, z: 0.2};
 // const LINEAR_DERIVATIVE_VELOCITY = { x: 2.50, y: 3.50, z: 2.00};
@@ -101,7 +101,7 @@ function calculateAngularCommandedPosition() {
     var desiredPhiAngle = linearCommandedAccelerations.x * Math.cos(localMathLib.toRadians(euler.angularPosition.psi));
     desiredPhiAngle += linearCommandedAccelerations.y * Math.sin(localMathLib.toRadians(euler.angularPosition.psi));
     desiredPhiAngle = desiredPhiAngle / ANGLE_DIVISOR;
-    var phiCommandNumerator = Math.sign(desiredPhiAngle) * Math.sin(localMathLib.toRadians(Math.abs(desiredPhiAngle)));
+    var phiCommandNumerator = Math.sign(desiredPhiAngle) * Math.sin(Math.abs(desiredPhiAngle));
     phiCommandedPosition = phiCommandNumerator;
 
     var thrustComm = linearCommandedAccelerations.x * (
