@@ -18,12 +18,28 @@ function getSuggestedControls(data) {
 
     for (var i = 0; i < data.length; i ++) {
         euler.update(data[i]);
-        kemper.update(data[i].time);
+        kemper.update(data[i].timech);
         var obj = Object.assign(kemper.getState(), euler.motion);
         suggested_controls.push(Object.assign(obj, multicopter.getState()));
     }
 
     return suggested_controls;
+}
+
+/**
+ * Initiates the kemper controller
+ */
+function initiateRC() {
+    data.recordDataCallback = function(state) {
+        kemper.update(state.timech);
+        var commandArr = [
+            kemper.phiCommand,
+            kemper.thetaCommand,
+            kemper.thrustCommand,
+            kemper.psiCommand,
+        ];
+        tello.command(new Buffer.from("rc " + commandArr.join(" ")));
+    }
 }
 
 module.exports = {
@@ -36,7 +52,7 @@ module.exports = {
         } else {
             var args = arg.split(",");
             var filename = args[0];
-            var doExport = (args.length >=2) ? args[1] : undefined;
+            var doExport = (args.length >= 2) ? args[1] : undefined;
             var controls = getSuggestedControls(data.readFile(filename));
             data.saveData(controls, filename + '_controls_', function() {
                 if (doExport == 'y') {
@@ -47,5 +63,8 @@ module.exports = {
             });
 
         }
+    },
+    initiate: function(arg, callback) {
+        initiateRC();
     }
 }

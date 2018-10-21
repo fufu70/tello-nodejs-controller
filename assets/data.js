@@ -8,6 +8,7 @@ var isListening = false;
 var isRecording = false;
 var recording = [];
 var lastFileSaved = "";
+var recordDataCallback = function(state) {};
 
 function init(callback) {
 
@@ -34,6 +35,7 @@ function recordData() {
     var state = getState();
     euler.update(state);
     recording.push(Object.assign(state, euler.motion));
+    recordDataCallback(state);
 }
 
 function saveData(data, prependToFilename, callback) {
@@ -95,5 +97,6 @@ module.exports = {
     },
     currentPosition: function() {
         return euler.linearPosition;
-    }
+    },
+    recordDataCallback: recordDataCallback
 }
